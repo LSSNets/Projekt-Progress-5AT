@@ -22,7 +22,7 @@ public class Simulator {
             System.exit(1);
         }
         this.conn=conn;
-        reinfolge = new ArrayList<String>(Arrays.asList("TP 1", "TP 2", "TP 3", "TP 4", "TP 5", "TP 6", "QV 3", "TP 10", "QV 8", "TP 9", "TP 11", "QV 4", "TP 12", "TP 13", "TP 14", "QV 7", "TP 14.1", "TP 15", "QV 5", "TP 18", "TP 23", "TP 25", "RBG", "###", "TP 30", "TP 1"));
+        reinfolge = new ArrayList<String>(Arrays.asList("TP 1", "TP 2", "TP 3", "TP 4", "TP 5", "TP 6","TP 7", "TP 10", "TP 12", "TP 13", "TP 14", "TP 16", "QV 5", "TP 18", "TP 23", "TP 25", "RBG", "###", "TP 30", "TP 1"));
         dauerstation = new ArrayList<Integer>(Arrays.asList(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10));
         lager = new ArrayList<ArrayList<Integer>>();
 
@@ -50,15 +50,18 @@ public class Simulator {
             statement.setString(1, String.valueOf(timestamp2));
             statement.setString(2, reinfolge.get(i));
             resultSet = statement.executeQuery();
-            Palette p=new Palette(6,"TP 4",timestamp2,this.conn);
+            Palette p=new Palette(6,"",timestamp2,this.conn);
             while (resultSet.next()) {
+                System.out.println("timestamp: "+String.valueOf(timestamp2)+" ort: "+reinfolge.get(i)+" palid: "+palid+" time: "+timestamp2);
                 palid = resultSet.getInt(1);
                 timestamp2 = resultSet.getTimestamp(2);
                 p.currenttime=timestamp2;
                 p.id=palid;
                 break;
             }
+            //System.out.println(palid+" ist paletten id");
             if (palid != 0) {
+                System.out.println("palette");
                 resultSet = null;
                 selectSql = "select distinct PalNo,TimeStamp from dbo.LocPalHistory where TimeStamp<=? and LocationName=? order by TimeStamp desc";
                 statement = conn.prepareStatement(selectSql);
@@ -74,14 +77,27 @@ public class Simulator {
                     if (reinfolge.get(i).equals("TP 2")) { //todo auf QV 2 warten wenn er weg ist testen
                         p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60*(long) dauerstation.get(i));
                         QV_2.kranbewegung(1,2,p,p.currenttime);
-                    }
-                    if(reinfolge.get(i).equals("TP 4")){
+                    }else if(reinfolge.get(i).equals("TP 4")){
                         p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60*(long) dauerstation.get(i));
                         QV_1.kranbewegung(2,3,p,p.currenttime);
-                    }
-                    if (reinfolge.get(i).equals("TP 6")){
+                    }else if (reinfolge.get(i).equals("TP 6")){
                         p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60*(long) dauerstation.get(i));
                         QV_3.kranbewegung(1,2,p,p.currenttime);
+                    }else if (reinfolge.get(i).equals("TP 16")){
+                        p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60*(long) dauerstation.get(i));
+                        QV_5.kranbewegung(2,4,p,p.currenttime);
+                    }else{
+                        p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60*(long) dauerstation.get(i));
+                        prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,0,?)");
+                        prepsInsertProduct.setString(1, reinfolge.get(i));
+                        prepsInsertProduct.setString(2, String.valueOf(p.currenttime));
+                        prepsInsertProduct.execute();
+                        p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60);
+                        prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)");
+                        prepsInsertProduct.setString(1, reinfolge.get(i+1));
+                        prepsInsertProduct.setString(2, String.valueOf(p.id));
+                        prepsInsertProduct.setString(3, String.valueOf(p.currenttime));
+                        prepsInsertProduct.execute();
                     }
                     /*if (reinfolge.get(i).equals("TP 6")){
                         p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60*(long) dauerstation.get(i));

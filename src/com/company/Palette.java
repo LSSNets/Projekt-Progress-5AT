@@ -5,7 +5,7 @@ import java.sql.*;
 
 public class Palette {
     int id;
-    String currentpos;
+    String currentpos;//useless
     Timestamp currenttime;
     Connection conn;
     public Palette(int id, String currentpos, Timestamp currenttime, Connection conn) throws SQLException {
