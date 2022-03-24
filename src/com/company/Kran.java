@@ -45,7 +45,7 @@ public class Kran {
         prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (?, ?,?)");
         prepsInsertProduct.setString(1, String.valueOf(id));
         prepsInsertProduct.setString(2, String.valueOf(startindex));
-        prepsInsertProduct.setString(3, String.valueOf(t));
+        prepsInsertProduct.setString(3, String.valueOf(new Timestamp(t.getTime()+30*1000)));
         prepsInsertProduct.execute();
         t=new Timestamp(t.getTime() + 1000 * 60);
         System.out.println(t+" - wird sinert into sample and locpal"+p.id+" "+endindex);

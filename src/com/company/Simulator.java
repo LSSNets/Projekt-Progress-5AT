@@ -28,8 +28,8 @@ public class Simulator {
 
     }
     void palettenrun() throws SQLException {
-        int palatposition = 0;
-        int palatposition2 = 0;
+        int palid = 0;
+        int palid2 = 0;
         String selectSql = "";
         PreparedStatement statement;
         PreparedStatement prepsInsertProduct;
@@ -37,6 +37,12 @@ public class Simulator {
         Timestamp timestamp2 = new Timestamp(date.getTime());
         Kran QV_2=new Kran("QV 2",new ArrayList<String>(Arrays.asList("TP 2", "TP 3")),conn,1,1,23);
         Kran QV_1=new Kran("QV 1",new ArrayList<String>(Arrays.asList("TP 1","TP 4", "TP 5")),conn,2,1,22);
+        Kran QV_3=new Kran("QV 3",new ArrayList<String>(Arrays.asList("TP 6","TP 7", "TP 8")),conn,2,1,6);
+        Kran QV_4=new Kran("QV 4",new ArrayList<String>(Arrays.asList("TP 11","TP 12")),conn,1,1,18);
+        Kran QV_8=new Kran("QV 8",new ArrayList<String>(Arrays.asList("TP 10","TP 9")),conn,1,1,1);
+        Kran QV_7=new Kran("QV 7",new ArrayList<String>(Arrays.asList("TP 14","TP 14.1")),conn,1,1,12);
+        Kran QV_5=new Kran("QV 5",new ArrayList<String>(Arrays.asList("TP 15","TP 16","TP 16.1","TP 17")),conn,1,1,13);
+
         for (int i = reinfolge.size() - 2; i >= 0; i--) {
             ResultSet resultSet = null;
             selectSql = "select distinct PalNo,Timestamp from dbo.LocPalHistory where TimeStamp<=? and LocationName=?";
@@ -46,13 +52,13 @@ public class Simulator {
             resultSet = statement.executeQuery();
             Palette p=new Palette(6,"TP 4",timestamp2,this.conn);
             while (resultSet.next()) {
-                palatposition = resultSet.getInt(1);
+                palid = resultSet.getInt(1);
                 timestamp2 = resultSet.getTimestamp(2);
                 p.currenttime=timestamp2;
-                p.id=palatposition;
+                p.id=palid;
                 break;
             }
-            if (palatposition != 0) {
+            if (palid != 0) {
                 resultSet = null;
                 selectSql = "select distinct PalNo,TimeStamp from dbo.LocPalHistory where TimeStamp<=? and LocationName=? order by TimeStamp desc";
                 statement = conn.prepareStatement(selectSql);
@@ -60,21 +66,27 @@ public class Simulator {
                 statement.setString(2, reinfolge.get(i + 1));
                 resultSet = statement.executeQuery();
                 while (resultSet.next()) {
-                    palatposition2 = resultSet.getInt(1);
+                    palid2 = resultSet.getInt(1);
                     break;
                 }
-                if (palatposition2 == 0) {
+                if (palid2 == 0) {
 
                     if (reinfolge.get(i).equals("TP 2")) { //todo auf QV 2 warten wenn er weg ist testen
                         p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60*(long) dauerstation.get(i));
                         QV_2.kranbewegung(1,2,p,p.currenttime);
                     }
                     if(reinfolge.get(i).equals("TP 4")){
-                        System.out.println("entered");
                         p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60*(long) dauerstation.get(i));
-
                         QV_1.kranbewegung(2,3,p,p.currenttime);
                     }
+                    if (reinfolge.get(i).equals("TP 6")){
+                        p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60*(long) dauerstation.get(i));
+                        QV_3.kranbewegung(1,2,p,p.currenttime);
+                    }
+                    /*if (reinfolge.get(i).equals("TP 6")){
+                        p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60*(long) dauerstation.get(i));
+                        QV_1.kranbewegung(1,2,p,p.currenttime);
+                    }*/
 
                 }
             }
