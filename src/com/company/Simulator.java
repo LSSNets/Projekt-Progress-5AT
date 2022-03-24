@@ -61,7 +61,6 @@ public class Simulator {
                 }
                 System.out.println(palatposition2+" ist der vert an der nächsten position");
                 if (palatposition2 == 0) {
-
                     System.out.println(i+" pos "+reinfolge.get(i)+" -- "+palatposition);
                     prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,0,?)");
                     prepsInsertProduct.setString(1, reinfolge.get(i));
@@ -69,30 +68,7 @@ public class Simulator {
                     prepsInsertProduct.setString(2, String.valueOf(timestamp2));
                     prepsInsertProduct.execute();
                     if (reinfolge.get(i).equals("TP 2")) { //todo auf QV 2 warten wenn er weg ist testen
-                        int qv2pos = 0;
-                        resultSet = null;
-                        selectSql = "select distinct value, TimeStamp from dbo.SampleValueHistoryT where TimeStamp<=? and Value_Id_Ref=23 order by Timestamp DESC";
-                        statement = conn.prepareStatement(selectSql);
-                        statement.setString(1, String.valueOf(new Timestamp(timestamp2.getTime())));
-                        resultSet = statement.executeQuery();
-                        while (resultSet.next()) {
-                            qv2pos = resultSet.getInt(1);
-                            break;
-                        }
-                        System.out.println(qv2pos+" ist qvpos "+timestamp2);
-                        if (qv2pos != 1) {
-                            timestamp2 = new Timestamp(timestamp2.getTime() + 1000 * 60);
-                        }
-                        prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (23, 1,?)");
-                        prepsInsertProduct.setString(1, String.valueOf(new Timestamp(timestamp2.getTime())));
-                        prepsInsertProduct.execute();
-                        prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (23, 2,?)");
-                        prepsInsertProduct.setString(1, String.valueOf(new Timestamp(timestamp2.getTime() + 1000 * 60)));
-                        prepsInsertProduct.execute();
-                        prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (23, 1,?)");
-                        prepsInsertProduct.setString(1, String.valueOf(new Timestamp(timestamp2.getTime() + 2 * 1000 * 60)));
-                        prepsInsertProduct.execute();
-                        timestamp2 = new Timestamp(timestamp2.getTime() + 1000 * 60);
+
                     }
                     if(reinfolge.get(i).equals("TP 9")){
 
