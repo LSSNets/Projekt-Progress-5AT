@@ -54,6 +54,23 @@ public class Palette {
                     //It can still be 0
                     System.out.println(locName + " is empty, adding new palette");
 
+                    //Put palette in rbg
+                    sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
+                    statement = conn.prepareStatement(sql);
+                    statement.setString(1, "RBG");
+                    statement.setString(2, String.valueOf(this.id));
+                    statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime())));
+                    statement.execute();
+
+                    // RBG auf 0
+                    sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
+                    statement = conn.prepareStatement(sql);
+                    statement.setString(1, "RBG");
+                    statement.setString(2, String.valueOf(0));
+                    statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime() + 1000*30)));
+                    statement.execute();
+
+
                     //Insert new Palette
                     sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
                     statement = conn.prepareStatement(sql);
