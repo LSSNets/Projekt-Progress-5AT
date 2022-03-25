@@ -54,6 +54,18 @@ public class Palette {
                     //It can still be 0
                     System.out.println(locName + " is empty, adding new palette");
 
+
+                    // Currentpos to 0
+
+                    //TP x auf 0 setzten
+                    sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
+                    statement = conn.prepareStatement(sql);
+                    statement.setString(1, this.currentpos);
+                    statement.setString(2, String.valueOf(0));
+                    statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime())));
+                    statement.execute();
+
+
                     //Put palette in rbg
                     sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
                     statement = conn.prepareStatement(sql);
@@ -96,6 +108,8 @@ public class Palette {
                     // -1 da es bei Datenbank aus irgendein Grund bei 1 startet und ich bei for schleife deshalb auch bei 1 starte
                     rbg.RBGBewegung(conn, this, j-1, pos , i-1 );
 
+
+                    // Clear lager
                     this.currenttime = new Timestamp(this.currenttime.getTime() + 1000*60*lagerzeit + 1000*30);
                     sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
                     statement = conn.prepareStatement(sql);
