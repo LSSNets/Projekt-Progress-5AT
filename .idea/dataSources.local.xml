@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="IU-213.7172.25">
+    <data-source name="Progress" uuid="b60128b2-c789-45ab-8bdd-d857a047ac6b">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MSSQL" exact-version="0" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>userTeam2</user-name>
+      <schema-mapping />
+    </data-source>
+  </component>
+</project>
