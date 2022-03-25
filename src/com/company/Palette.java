@@ -1,5 +1,6 @@
 package com.company;
 
+
 import java.sql.*;
 
 public class Palette {
@@ -12,6 +13,9 @@ public class Palette {
         this.conn=conn;
         this.currentpos = currentpos;
         this.currenttime = currenttime;
+        //String selectSql = "insert into dbo.LocPalHistory (LocationName,PalNo,TimeStamp) values ('TP 2',6,current_timestamp)";
+        //PreparedStatement statement = this.conn.prepareStatement(selectSql);
+       // statement.execute();
     }
 
     String einlagern() throws SQLException {
@@ -55,14 +59,27 @@ public class Palette {
                     statement = conn.prepareStatement(sql);
                     statement.setString(1, locName);
                     statement.setString(2, String.valueOf(this.id));
-                    //todo ADD ANIMATION
-
-
-                    this.currenttime = new Timestamp(this.currenttime.getTime() + 1000*30);
-                    statement.setString(3, String.valueOf(this.currenttime));
+                    statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime() + 1000*30)));
                     statement.execute();
 
-                    this.currenttime = new Timestamp(this.currenttime.getTime() + 1000*60*lagerzeit);
+
+                    RBG rbg = new RBG();
+
+                    int pos = 0;
+                    String[] s = this.currentpos.split(" ");
+                    if (s[0].equals("TP")) {
+                        int num=Integer.parseInt(s[1]);
+                        pos = num-24;                                       //TP 24,TP 25, TP 26, TP 27
+
+                    }else{
+                        System.out.println(this.currentpos + " Is not a valid position for the Palete "+ this.id);
+                        return "ERROR WHILE ADDING PALET TO LAGER";
+                    }
+                    // ANIMATION
+                    // -1 da es bei Datenbank aus irgendein Grund bei 1 startet und ich bei for schleife deshalb auch bei 1 starte
+                    rbg.RBGBewegung(conn, this, j-1, pos , i-1 );
+
+                    this.currenttime = new Timestamp(this.currenttime.getTime() + 1000*60*lagerzeit + 1000*30);
                     sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
                     statement = conn.prepareStatement(sql);
                     statement.setString(1, locName);
@@ -78,3 +95,4 @@ public class Palette {
     }
 
 }
+
