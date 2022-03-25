@@ -54,6 +54,7 @@ public class Kran {
         prepsInsertProduct.setString(2, String.valueOf(endindex));
         prepsInsertProduct.setString(3, String.valueOf(t));
         prepsInsertProduct.execute();
+        p.currentpos=stationsnamen.get(endindex-1);
         prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)");
         prepsInsertProduct.setString(1, stationsnamen.get(endindex-1));
         prepsInsertProduct.setString(2, String.valueOf(p.id));
