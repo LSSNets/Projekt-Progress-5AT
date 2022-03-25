@@ -85,7 +85,7 @@ public class Simulator {
                         prepsInsertProduct.setString(1, reinfolge.get(9));
                         prepsInsertProduct.setString(2, String.valueOf(p.id));
                         prepsInsertProduct.setString(3, String.valueOf(p.currenttime));
-                        prepsInsertProduct.execute();
+                        prepsInsegirtProduct.execute();
                         continue;
                     }
                 }
