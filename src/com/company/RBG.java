@@ -22,7 +22,25 @@ public class RBG {
         prepsInsertProduct.setString(1, String.valueOf(tp[position]));//pos
         prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
         prepsInsertProduct.execute();
+        palette.currenttime = new Timestamp(palette.currenttime.getTime()+1000*30);
+        prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (8,?,?)");
+        prepsInsertProduct.setString(1, String.valueOf(hub[0]));//hub
+        prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
+        prepsInsertProduct.execute();
+        prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (2,?,?)");
+        prepsInsertProduct.setString(1, String.valueOf(tp[position]));//pos
+        prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
+        prepsInsertProduct.execute();
         //in Lager
+        palette.currenttime = new Timestamp(palette.currenttime.getTime()+1000*30);
+        prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (8,?,?)");
+        prepsInsertProduct.setString(1, String.valueOf(hub[etage]));//hub
+        prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
+        prepsInsertProduct.execute();
+        prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (2,?,?)");
+        prepsInsertProduct.setString(1, String.valueOf(regal[regalIn]));//pos
+        prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
+        prepsInsertProduct.execute();
         palette.currenttime = new Timestamp(palette.currenttime.getTime()+1000*30);
         prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (8,?,?)");
         prepsInsertProduct.setString(1, String.valueOf(hub[etage]));//hub
