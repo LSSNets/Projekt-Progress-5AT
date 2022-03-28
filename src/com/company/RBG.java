@@ -11,24 +11,15 @@ public class RBG {
     float[] tp = {0.1f,4400.1f,8800.1f,12130.1f}; //TP 24,TP 25, TP 26, TP 27
     float[] regal = {2350.1f,5660.1f,8800.1f,12130.1f,15380.1f}; //LG 1, LG 2, LG 3, LG 4, LG 5
 
-    void RBGBewegung(Connection conn, Palette palette, int etage, int position, int regalIn) throws SQLException {
+    void RBGBewegung(Connection conn, Palette palette,  int regalPosition, int regalEtage, int regalIn, int etage) throws SQLException {
         //abholen
         PreparedStatement prepsInsertProduct;
         prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (8,?,?)");
-        prepsInsertProduct.setString(1, String.valueOf(hub[0]));//hub
+        prepsInsertProduct.setString(1, String.valueOf(hub[regalEtage]));//hub
         prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
         prepsInsertProduct.execute();
         prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (2,?,?)");
-        prepsInsertProduct.setString(1, String.valueOf(tp[position]));//pos
-        prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
-        prepsInsertProduct.execute();
-        palette.currenttime = new Timestamp(palette.currenttime.getTime()+1000*30);
-        prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (8,?,?)");
-        prepsInsertProduct.setString(1, String.valueOf(hub[0]));//hub
-        prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
-        prepsInsertProduct.execute();
-        prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (2,?,?)");
-        prepsInsertProduct.setString(1, String.valueOf(tp[position]));//pos
+        prepsInsertProduct.setString(1, String.valueOf(tp[regalPosition]));//pos
         prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
         prepsInsertProduct.execute();
         //in Lager
@@ -41,14 +32,16 @@ public class RBG {
         prepsInsertProduct.setString(1, String.valueOf(regal[regalIn]));//pos
         prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
         prepsInsertProduct.execute();
-        palette.currenttime = new Timestamp(palette.currenttime.getTime()+1000*30);
+
+
+        // BLEIB STEHEN RBG!
         prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (8,?,?)");
         prepsInsertProduct.setString(1, String.valueOf(hub[etage]));//hub
-        prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
+        prepsInsertProduct.setString(2, String.valueOf(new Timestamp(palette.currenttime.getTime()+20)));
         prepsInsertProduct.execute();
         prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (2,?,?)");
         prepsInsertProduct.setString(1, String.valueOf(regal[regalIn]));//pos
-        prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
+        prepsInsertProduct.setString(2, String.valueOf(new Timestamp(palette.currenttime.getTime()+20)));
         prepsInsertProduct.execute();
     }
 }
