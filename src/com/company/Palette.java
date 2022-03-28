@@ -29,9 +29,11 @@ public class Palette {
                 // MAche abfrage
 
                 resultSet = null;
+                System.out.println(this.currenttime);
                 sql = "select PalNo, TimeStamp from dbo.LocPalHistory where LocationName=? and TimeStamp <= ? and TimeStamp >= ? ORDER BY TimeStamp DESC";
                 statement = conn.prepareStatement(sql);
                 String locName = "LG " + i + "|" + j;
+                System.out.println(locName );
                 statement.setString(1, locName);
 
                 // Wenn er schon auß dem Lager draußen ist, ist es egal
@@ -39,19 +41,39 @@ public class Palette {
                 // Fall 2: Es wurde in diesser Zeit aus dem Lager etwas rausgetan  (pal_id ist 0)
                 // Bei diesen Fällen kann man einfügen
                 // Fall 3: Es wurde in letzter Zeit eine Palette eingefügt. Aufgrund der Lagerzeit ist es noch blockiert zum Zeitpunkt
-                statement.setString(2, String.valueOf(new Timestamp(this.currenttime.getTime()+ 1000*30)));
+                statement.setString(2, String.valueOf(new Timestamp(this.currenttime.getTime()+ 1000*60*lagerzeit)));
+                System.out.println(new Timestamp(this.currenttime.getTime()+ 1000*30));
                 statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime()- 1000*60* lagerzeit )));
                 System.out.println(new Timestamp(this.currenttime.getTime()- 1000*60* lagerzeit ));
 
                 resultSet = statement.executeQuery();
                 boolean b = resultSet.next();
                 System.out.println(b);
-
+                if(!b){
+                    System.out.println("empty");
+                }
                 if( !b || resultSet.getInt(1) == 0){                // doesnt exist or was emptied again
                     //It can still be 0
                     System.out.println(locName + " is empty, adding new palette");
 
-                    this.currenttime = new Timestamp(this.currenttime.getTime() + 1000*30);
+                    // See if RBG is in Use atm
+
+                    do {
+                        sql = "select PalNo, TimeStamp from dbo.LocPalHistory where LocationName=? and TimeStamp <= ? and TimeStamp >= ? ORDER BY TimeStamp DESC";
+                        statement = conn.prepareStatement(sql);
+                        statement.setString(1, "RBG");
+                        statement.setString(2, String.valueOf(new Timestamp(this.currenttime.getTime() + 30 * 1000)));
+                        statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime() - 30*1000)));
+                        System.out.println("Checking for RBG Conflicting times");
+                        resultSet = statement.executeQuery();
+                        b = resultSet.next();
+
+                        this.currenttime = new Timestamp(this.currenttime.getTime() + 1000*30);
+                    }while(b);
+
+
+
+                    //
 
                     // Currentpos to 0
 
@@ -62,6 +84,9 @@ public class Palette {
                     statement.setString(2, String.valueOf(0));
                     statement.setString(3, String.valueOf(this.currenttime));
                     statement.execute();
+
+
+
 
 
                     //Put palette in rbg
@@ -92,6 +117,20 @@ public class Palette {
                     statement.execute();
 
 
+                    //  Statusupdate PalDataMilestoneHistory - EnteredInDryingChamber
+                    sql = "insert into ebos_Progress_Team2.dbo.PalDataMilestonesHistory (PalData_Id, TimeStamp, PalUnitAssigned," +
+                            "ShutteringFinished, BarsPlaced, GirdersPlaced, ConcretingFinished," +
+                            "EnteredInDryChamber, RemovedFromDryChamber, RemovedFromPalUnit)" +
+                            "values (?, ?, 'true', 'true', 'true'," +
+                            "'true', 'true', 'true', 'false', 'true');";
+                    statement = conn.prepareStatement(sql);
+                    statement.setString(1, String.valueOf(this.id));
+                    statement.setString(2, String.valueOf(this.currenttime));
+                    statement.execute();
+
+
+
+
                     RBG rbg = new RBG();
 
                     int pos = 0;
@@ -118,6 +157,62 @@ public class Palette {
                     statement.setString(3, String.valueOf(this.currenttime));
                     statement.execute();
 
+                    // Statusupdate PalDataMilestoneHistory - RemovedFromDryingChamber
+                    sql = "insert into ebos_Progress_Team2.dbo.PalDataMilestonesHistory (PalData_Id, TimeStamp, PalUnitAssigned," +
+                            "ShutteringFinished, BarsPlaced, GirdersPlaced, ConcretingFinished," +
+                            "EnteredInDryChamber, RemovedFromDryChamber, RemovedFromPalUnit)" +
+                            "values (?, ?, 'true', 'true', 'true'," +
+                            "'true', 'true', 'true', 'true', 'true');";
+                    statement = conn.prepareStatement(sql);
+                    statement.setString(1, String.valueOf(this.id));
+                    statement.setString(2, String.valueOf(this.currenttime));
+                    statement.execute();
+
+                    //TODO RBG Animation (versucht aber funktionierte nicht)
+                    //Put palette in rbg
+                    sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
+                    statement = conn.prepareStatement(sql);
+                    statement.setString(1, "RBG");
+                    statement.setString(2, String.valueOf(this.id));
+                    statement.setString(3, String.valueOf(this.currenttime));
+                    statement.execute();
+                    this.currentpos = "RBG";
+
+                    this.currenttime = new Timestamp(this.currenttime.getTime() + 1000*30);
+                    // RBG auf 0
+                    sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
+                    statement = conn.prepareStatement(sql);
+                    statement.setString(1, "RBG");
+                    statement.setString(2, String.valueOf(0));
+                    statement.setString(3, String.valueOf(this.currenttime));
+                    statement.execute();
+
+                    // Palette zu TP 30
+                    sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
+                    statement = conn.prepareStatement(sql);
+                    statement.setString(1, "TP 30");
+                    statement.setString(2, String.valueOf(this.id));
+                    statement.setString(3, String.valueOf(this.currenttime));
+                    statement.execute();
+
+                    this.currenttime = new Timestamp(this.currenttime.getTime() + 1000*30);
+
+                    // TP 30 auf 0
+                    sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
+                    statement = conn.prepareStatement(sql);
+                    statement.setString(1, "TP 30");
+                    statement.setString(2, String.valueOf(0));
+                    statement.setString(3, String.valueOf(this.currenttime));
+                    statement.execute();
+
+                    // Palette zu TP 1
+                    sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
+                    statement = conn.prepareStatement(sql);
+                    statement.setString(1, "TP 1");
+                    statement.setString(2, String.valueOf(this.id));
+                    statement.setString(3, String.valueOf(this.currenttime));
+                    statement.execute();
+
                     return locName;
                 }
             }
@@ -126,3 +221,4 @@ public class Palette {
     }
 
 }
+
