@@ -145,9 +145,10 @@ public class Palette {
                         return "ERROR WHILE ADDING PALET TO LAGER";
                     }
                     // ANIMATION
-                    // -1 da es bei Datenbank aus irgendein Grund bei 1 startet und ich bei for schleife deshalb auch bei 1 starte
-                    rbg.RBGBewegung(conn, this, j-1, pos , i-1 );
-
+                    //Dass time richtig ist
+                    this.currenttime = new Timestamp(this.currenttime.getTime()-30*1000);
+                    rbg.RBGBewegung(conn, this, pos, 0, i-1, j-1 );
+                    this.currenttime = new Timestamp(this.currenttime.getTime()+30*1000);
 
                     // Clear lager
                     this.currenttime = new Timestamp(this.currenttime.getTime() + 1000*60*lagerzeit + 1000*30);
