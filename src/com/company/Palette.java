@@ -1,7 +1,7 @@
 package com.company;
 
-
 import java.sql.*;
+import java.util.Objects;
 
 public class Palette {
     int id;
@@ -13,9 +13,6 @@ public class Palette {
         this.conn=conn;
         this.currentpos = currentpos;
         this.currenttime = currenttime;
-        //String selectSql = "insert into dbo.LocPalHistory (LocationName,PalNo,TimeStamp) values ('TP 2',6,current_timestamp)";
-        //PreparedStatement statement = this.conn.prepareStatement(selectSql);
-       // statement.execute();
     }
 
     String einlagern() throws SQLException {
@@ -62,7 +59,7 @@ public class Palette {
                     statement = conn.prepareStatement(sql);
                     statement.setString(1, this.currentpos);
                     statement.setString(2, String.valueOf(0));
-                    statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime())));
+                    statement.setString(3, String.valueOf(this.currenttime));
                     statement.execute();
 
 
@@ -71,15 +68,17 @@ public class Palette {
                     statement = conn.prepareStatement(sql);
                     statement.setString(1, "RBG");
                     statement.setString(2, String.valueOf(this.id));
-                    statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime())));
+                    statement.setString(3, String.valueOf(this.currenttime));
                     statement.execute();
+
+                    this.currenttime = new Timestamp(this.currenttime.getTime() + 1000*30);
 
                     // RBG auf 0
                     sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
                     statement = conn.prepareStatement(sql);
                     statement.setString(1, "RBG");
                     statement.setString(2, String.valueOf(0));
-                    statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime() + 1000*30)));
+                    statement.setString(3, String.valueOf(this.currenttime));
                     statement.execute();
 
 
@@ -88,7 +87,7 @@ public class Palette {
                     statement = conn.prepareStatement(sql);
                     statement.setString(1, locName);
                     statement.setString(2, String.valueOf(this.id));
-                    statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime() + 1000*30)));
+                    statement.setString(3, String.valueOf(this.currenttime));
                     statement.execute();
 
 
@@ -126,4 +125,3 @@ public class Palette {
     }
 
 }
-

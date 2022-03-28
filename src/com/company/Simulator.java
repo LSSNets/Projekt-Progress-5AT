@@ -23,7 +23,7 @@ public class Simulator {
             System.exit(1);
         }
         this.conn = conn;
-        reinfolge = new ArrayList<String>(Arrays.asList("TP 1", "TP 2", "TP 3", "TP 4", "TP 5", "TP 6", "TP 7", "TP 10", "TP 12", "TP 13", "TP 14", "TP 16", "QV 5", "TP 18", "TP 23", "TP 26", "RBG", "###", "TP 30", "TP 1"));
+        reinfolge = new ArrayList<String>(Arrays.asList("TP 1", "TP 2", "TP 3", "TP 4", "TP 5", "TP 6","TP 7", "TP 8", "TP 9", "TP 10", "TP 12", "TP 13", "TP 14", "TP 16", "QV 5", "TP 18", "TP 23", "TP 26", "RBG", "###", "TP 30", "TP 1"));
         dauerstation = new ArrayList<Integer>(Arrays.asList(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10));
         lager = new ArrayList<ArrayList<Integer>>();
 
@@ -79,8 +79,31 @@ public class Simulator {
                     palid2 = resultSet.getInt(1);
                     break;
                 }
+                /*if (reinfolge.get(i).equals("TP 7")) { // if TP 10 is not free it will push the palette to a passing point
+                    statement.setString(2, reinfolge.get(9));   // Check if TP 10 is free
+                    resultSet = statement.executeQuery();
+                    while (resultSet.next()) {
+                        palid2 = resultSet.getInt(1);
+                        break;
+                    }
+                    if (palid2 == 0) {  // if TP 10 is free
+                        p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60*(long) dauerstation.get(i));
+                        prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,0,?)");
+                        prepsInsertProduct.setString(1, reinfolge.get(i));
+                        prepsInsertProduct.setString(2, String.valueOf(p.currenttime));
+                        prepsInsertProduct.execute();
+                        p.currenttime=new Timestamp(p.currenttime.getTime()+1000*60);
+                        prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)");
+                        prepsInsertProduct.setString(1, reinfolge.get(9));
+                        prepsInsertProduct.setString(2, String.valueOf(p.id));
+                        prepsInsertProduct.setString(3, String.valueOf(p.currenttime));
+                        prepsInsertProduct.execute();
+                        continue;
+                    }
+                }*/
+
                 if (palid2 == 0) {
-                    //updateprocessupdate(p);
+                    updateprocessupdate(p);
                     System.out.println("bewegen");
                     if (reinfolge.get(i).equals("TP 2")) { //todo auf QV 2 warten wenn er weg ist testen
                         p.currenttime = new Timestamp(p.currenttime.getTime() + 1000 * 60 * (long) dauerstation.get(i));
