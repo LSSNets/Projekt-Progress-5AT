@@ -23,8 +23,8 @@ public class Simulator {
             System.exit(1);
         }
         this.conn = conn;
-        reinfolge = new ArrayList<String>(Arrays.asList("TP 1", "TP 2", "TP 3", "TP 4", "TP 5", "TP 6", "TP 7", "TP 8", "TP 9", "TP 10", "TP 12", "TP 13", "TP 14", "TP 16", "TP 18", "TP 23", "TP 25", "TP 26", "TP 27", "RBG", "###", "TP 30", "TP 1"));
-        dauerstation = new ArrayList<Integer>(Arrays.asList(10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10));
+        reinfolge = new ArrayList<String>(Arrays.asList("TP 1", "TP 2", "TP 3", "TP 4", "TP 5", "TP 6", "TP 7", "TP 8", "TP 9", "TP 10", "TP 12", "TP 13", "TP 14", "TP 16", "TP 16.1", "TP 18", "TP 23", "TP 25", "TP 26", "TP 27", "RBG", "###", "TP 30", "TP 1"));
+        dauerstation = new ArrayList<Integer>(Arrays.asList(10, 10, 10, 10, 10, 10, 10, 10, 10, 1000, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10));
         lager = new ArrayList<ArrayList<Integer>>();
 
     }
@@ -165,7 +165,7 @@ public class Simulator {
         ResultSet rs;
         prepsInsertProduct = conn.prepareStatement("select count(*) from ebos_Progress_Team2.dbo.PalDataBelHistory where PalData_Id in (1);");
         rs = prepsInsertProduct.executeQuery();
-        prepsInsertProduct = conn.prepareStatement("insert into ebos_Progress_Team2.dbo.PalData (ProdSeqIdx, ProcessType) values (1, 0);");
+        prepsInsertProduct = conn.prepareStatement("insert into ebos_Progress_Team2.dbo.PalData (ProdSeqIdx , PalJob_Id , ProcessType) values (1,1,0);");
         prepsInsertProduct.execute();
         prepsInsertProduct = conn.prepareStatement("select max(PalData_Id) from dbo.PalData");
         rs = prepsInsertProduct.executeQuery();
