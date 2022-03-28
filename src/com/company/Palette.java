@@ -59,12 +59,13 @@ public class Palette {
                     // See if RBG is in Use atm
 
                     do {
-                        sql = "select PalNo, TimeStamp from dbo.LocPalHistory where LocationName=? and TimeStamp <= ? and TimeStamp >= ? ORDER BY TimeStamp DESC";
+                        sql = "select PalNo, TimeStamp from dbo.LocPalHistory where LocationName=? and TimeStamp <= ? and TimeStamp > ? ORDER BY TimeStamp DESC";
                         statement = conn.prepareStatement(sql);
                         statement.setString(1, "RBG");
                         statement.setString(2, String.valueOf(new Timestamp(this.currenttime.getTime() + 30 * 1000)));
-                        statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime() - 30*1000)));
+                        statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime())));
                         System.out.println("Checking for RBG Conflicting times");
+                        System.out.println(this.currenttime);
                         resultSet = statement.executeQuery();
                         b = resultSet.next();
 
