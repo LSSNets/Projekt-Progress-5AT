@@ -51,6 +51,7 @@ public class Palette {
                     //It can still be 0
                     System.out.println(locName + " is empty, adding new palette");
 
+                    this.currenttime = new Timestamp(this.currenttime.getTime() + 1000*30);
 
                     // Currentpos to 0
 
