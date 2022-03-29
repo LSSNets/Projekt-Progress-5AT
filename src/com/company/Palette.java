@@ -18,7 +18,7 @@ public class Palette {
     String einlagern() throws SQLException {
         // Todo Handle wenn es keinen Freien Platz mehr gibt ( Momentan gibt es einfach empty String zurück)
         // return pos in lager, add to freiem Platz
-        int lagerzeit = 10; // 10 minuten
+        int lagerzeit = 8*60; // 8 Stunden
         ResultSet resultSet;
         String sql;
         PreparedStatement statement;
@@ -118,18 +118,6 @@ public class Palette {
                     statement.execute();
 
 
-                    //  Statusupdate PalDataMilestoneHistory - EnteredInDryingChamber
-                    sql = "insert into ebos_Progress_Team2.dbo.PalDataMilestonesHistory (PalData_Id, TimeStamp, PalUnitAssigned," +
-                            "ShutteringFinished, BarsPlaced, GirdersPlaced, ConcretingFinished," +
-                            "EnteredInDryChamber, RemovedFromDryChamber, RemovedFromPalUnit)" +
-                            "values (?, ?, 'true', 'true', 'true'," +
-                            "'true', 'true', 'true', 'false', 'true');";
-                    statement = conn.prepareStatement(sql);
-                    statement.setString(1, String.valueOf(this.id));
-                    statement.setString(2, String.valueOf(this.currenttime));
-                    statement.execute();
-
-
 
 
                     RBG rbg = new RBG();
@@ -159,16 +147,7 @@ public class Palette {
                     statement.setString(3, String.valueOf(this.currenttime));
                     statement.execute();
 
-                    // Statusupdate PalDataMilestoneHistory - RemovedFromDryingChamber
-                    sql = "insert into ebos_Progress_Team2.dbo.PalDataMilestonesHistory (PalData_Id, TimeStamp, PalUnitAssigned," +
-                            "ShutteringFinished, BarsPlaced, GirdersPlaced, ConcretingFinished," +
-                            "EnteredInDryChamber, RemovedFromDryChamber, RemovedFromPalUnit)" +
-                            "values (?, ?, 'true', 'true', 'true'," +
-                            "'true', 'true', 'true', 'true', 'true');";
-                    statement = conn.prepareStatement(sql);
-                    statement.setString(1, String.valueOf(this.id));
-                    statement.setString(2, String.valueOf(this.currenttime));
-                    statement.execute();
+
 
                     //TODO RBG Animation
 

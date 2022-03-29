@@ -67,6 +67,7 @@ public class Kran {
         prepsInsertProduct.setString(3, String.valueOf(new Timestamp(t.getTime())));
         prepsInsertProduct.execute();
         t = new Timestamp(t.getTime() + 1000 * 60);
+        p.currentpos=stationsnamen.get(endindex-1);
 
     }
 }

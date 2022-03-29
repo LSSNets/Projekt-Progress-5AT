@@ -10,6 +10,20 @@ public class Main {
     public static void main(String[] args) throws SQLException {
         Simulator s=new Simulator();
         s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
+        s.palettenrun();
         //var lagerlist=Arrays.asList(["LG 1|",3,16],["LG 2|",3,16],["LG 3|",1,16],["LG 4|",1,16],["LG 5|",1,16])
 
         /*ResultSet resultSet = null;
