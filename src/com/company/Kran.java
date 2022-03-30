@@ -20,7 +20,7 @@ public class Kran {
     }
 
     void kranbewegung(int startindex,int endindex,Palette p,Timestamp t) throws SQLException {
-        System.out.println(" start: "+startindex+" endindex: "+endindex+" stationnen"+stationsnamen.get(startindex-1)+" "+stationsnamen.get(endindex-1));
+       //System.out.println(" start: "+startindex+" endindex: "+endindex+" stationnen"+stationsnamen.get(startindex-1)+" "+stationsnamen.get(endindex-1));
         ResultSet resultSet = null;
         PreparedStatement statement = conn.prepareStatement("select distinct value, TimeStamp from dbo.SampleValueHistoryT where TimeStamp<=? and Value_Id_Ref=? order by Timestamp DESC");
         statement.setString(1, String.valueOf(new Timestamp(t.getTime())));
@@ -28,15 +28,15 @@ public class Kran {
         resultSet = statement.executeQuery();
         while (resultSet.next()) {
             this.pos = resultSet.getInt(1);
-            System.out.println("pos wurde gesetzt");
+           //System.out.println("pos wurde gesetzt");
             break;
         }
-        System.out.println(pos + " ist qvpos " + t);
+       //System.out.println(pos + " ist qvpos " + t);
         if (pos != startindex) {
             t = new Timestamp(t.getTime() + ((long) bewegungsdauer) * 1000 * 60);
-            System.out.println("warten warten warten auf kran du lappen"+startindex+" ## "+pos);
+           //System.out.println("warten warten warten auf kran du lappen"+startindex+" ## "+pos);
         }
-        System.out.println("in kranbewegung");
+       //System.out.println("in kranbewegung");
         PreparedStatement prepsInsertProduct;
         prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,0,?)");
         prepsInsertProduct.setString(1, stationsnamen.get(startindex-1));
@@ -48,7 +48,7 @@ public class Kran {
         prepsInsertProduct.setString(3, String.valueOf(new Timestamp(t.getTime()+30*1000)));
         prepsInsertProduct.execute();
         t=new Timestamp(t.getTime() + 1000 * 60);
-        System.out.println(t+" - wird sinert into sample and locpal"+p.id+" "+endindex);
+       //System.out.println(t+" - wird sinert into sample and locpal"+p.id+" "+endindex);
         prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (?, ?,?)");
         prepsInsertProduct.setString(1, String.valueOf(id));
         prepsInsertProduct.setString(2, String.valueOf(endindex));

@@ -17,10 +17,10 @@ public class Simulator {
         String pass = "KennwortTeam2";
         Connection conn = DriverManager.getConnection(dbURL, user, pass);
         if (conn != null) {
-            System.out.println("Connected");
+           //System.out.println("Connected");
         } else {
-            System.out.println("Error connecting to db");
-            System.exit(1);
+           //System.out.println("Error connecting to db");
+           //System.exit(1);
         }
         this.conn = conn;
         reinfolge = new ArrayList<String>(Arrays.asList("TP 1", "TP 2", "TP 3", "TP 4", "TP 5", "TP 6", "TP 7", "TP 8", "TP 9", "TP 11", "TP 10", "TP 12", "TP 13", "TP 14", "TP 16", "TP 16.1", "TP 17", "TP 22", "TP 24", "TP 25","TP 26", "TP 27", "RBG", "###", "TP 30", "TP 1"));
@@ -48,7 +48,7 @@ public class Simulator {
             Date d = new Date();
             Timestamp timestamp2 = new Timestamp(d.getTime());
             ResultSet resultSet = null;
-            System.out.println(timestamp2 + " ist timestapm 2");
+           //System.out.println(timestamp2 + " ist timestapm 2");
             selectSql = "select distinct PalNo,Timestamp,locationname from dbo.LocPalHistory where TimeStamp<=? and LocationName=? order by TimeStamp desc";
             statement = conn.prepareStatement(selectSql);
             statement.setString(1, String.valueOf(timestamp2));
@@ -57,7 +57,7 @@ public class Simulator {
             Palette p = new Palette(-1, "", timestamp2, this.conn);
             palid = 0;
             while (resultSet.next()) {
-                System.out.println("timestamp: " + String.valueOf(timestamp2) + " ort: " + reinfolge.get(i) + " palid: " + palid + " time: " + timestamp2);
+               //System.out.println("timestamp: " + String.valueOf(timestamp2) + " ort: " + reinfolge.get(i) + " palid: " + palid + " time: " + timestamp2);
                 palid = resultSet.getInt(1);
                 timestamp2 = resultSet.getTimestamp(2);
                 p.currenttime = timestamp2;
@@ -66,12 +66,12 @@ public class Simulator {
                 break;
             }
             if (p.id == -1) {
-                System.out.println("missing id");
+               //System.out.println("missing id");
                 continue;
             }
-            System.out.println(palid + " ist paletten id " + i + " ## " + reinfolge.get(i));
+           //System.out.println(palid + " ist paletten id " + i + " ## " + reinfolge.get(i));
             if (palid != 0) {
-                System.out.println("palette " + reinfolge.get(i));
+               //System.out.println("palette " + reinfolge.get(i));
                 int id;
                 int paldataid;
                 if (reinfolge.get(i).equals("TP 6"))
@@ -87,18 +87,18 @@ public class Simulator {
                     break;
                 }
                 if (reinfolge.get(i).equals("TP 7")) { // if TP 10 is not free it will push the palette to a passing point
-                    System.out.println("abkürzung TP 7");
+                   //System.out.println("abkürzung TP 7");
                     statement = conn.prepareStatement(selectSql);
                     statement.setString(1, String.valueOf(timestamp2));
                     statement.setString(2, reinfolge.get(9));   // Check if TP 10 is free
                     resultSet = statement.executeQuery();
                     while (resultSet.next()) {
                         palid2 = resultSet.getInt(1);
-                        System.out.println("palid2 wurde gefuknden " + palid2);
+                       //System.out.println("palid2 wurde gefuknden " + palid2);
                         break;
                     }
                     if (palid2 == 0) {  // if TP 10 is free
-                        System.out.println(" nimmt die abkürung");
+                       //System.out.println(" nimmt die abkürung");
                         p.currenttime = new Timestamp(p.currenttime.getTime() + 1000 * 60 * (long) dauerstation.get(i));
                         prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,0,?)");
                         prepsInsertProduct.setString(1, reinfolge.get(i));
@@ -113,23 +113,23 @@ public class Simulator {
                         p.currentpos = "TP 10";
                         continue;
                     } else {
-                        System.out.println("geht normal weiter" + i);
+                       //System.out.println("geht normal weiter" + i);
                     }
                 }
 
                 if (reinfolge.get(i).equals("TP 9")) { // if TP 10 is not free it will push the palette to a passing point
-                    System.out.println("abkürzung");
+                   //System.out.println("abkürzung");
                     statement = conn.prepareStatement(selectSql);
                     statement.setString(1, String.valueOf(timestamp2));
                     statement.setString(2, reinfolge.get(9));   // Check if TP 10 is free
                     resultSet = statement.executeQuery();
                     while (resultSet.next()) {
                         palid2 = resultSet.getInt(1);
-                        System.out.println("palid2 wurde gefuknden " + palid2);
+                       //System.out.println("palid2 wurde gefuknden " + palid2);
                         break;
                     }
                     if (palid2 == 0) {  // if TP 10 is free
-                        System.out.println(" nimmt die abkürung");
+                       //System.out.println(" nimmt die abkürung");
                         p.currenttime = new Timestamp(p.currenttime.getTime() + 1000 * 60 * (long) dauerstation.get(i));
                         prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,0,?)");
                         prepsInsertProduct.setString(1, reinfolge.get(i));
@@ -144,7 +144,7 @@ public class Simulator {
                         prepsInsertProduct.execute();
                         continue;
                     } else {
-                        System.out.println("geht normal weiter" + i);
+                       //System.out.println("geht normal weiter" + i);
                     }
                 }
                 selectSql = "select distinct PalNo,TimeStamp from dbo.LocPalHistory where TimeStamp<=? and LocationName=? order by TimeStamp desc";
@@ -153,15 +153,15 @@ public class Simulator {
                 statement.setString(2, reinfolge.get(ii));
                 resultSet = statement.executeQuery();
                 palid2 = 0;
-                System.out.println("sql command execution " + palid2);
+               //System.out.println("sql command execution " + palid2);
                 while (resultSet.next()) {
                     palid2 = resultSet.getInt(1);
                     break;
                 }
-                System.out.println(palid2 + " ## " + i);
+               //System.out.println(palid2 + " ## " + i);
                 if (palid2 == 0) {
                     updateprocessupdate(p);
-                    System.out.println("bewegen bewegen" + p.currentpos);
+                   //System.out.println("bewegen bewegen" + p.currentpos);
                     if (reinfolge.get(i).equals("TP 2")) { //todo auf QV 2 warten wenn er weg ist testen
                         p.currenttime = new Timestamp(p.currenttime.getTime() + 1000 * 60 * (long) dauerstation.get(i));
                         QV_2.kranbewegung(1, 2, p, p.currenttime);
@@ -205,19 +205,19 @@ public class Simulator {
 
     void updatestorageentry(Palette p) throws SQLException {
         PreparedStatement prepsInsertProduct;
-        prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set RemovedFromDryChamber='false', EnteredInDryChamber='true' where PalData_Id in (select PalData_Id)");
+        prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set RemovedFromDryChamber='false', EnteredInDryChamber='true' where PalData_Id in (select PalData_Id from ebos_Progress_Team2.dbo.PalDataBelHistory where PalNo in (?));");
         prepsInsertProduct.setString(1, String.valueOf(p.id));
         prepsInsertProduct.execute();
     }
 
     void updatestorageleave(Palette p) throws SQLException {
         PreparedStatement prepsInsertProduct;
-        prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set RemovedFromDryChamber='true', EnteredInDryChamber='false' where PalData_Id in (select PalData_Id)");
+        prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set RemovedFromDryChamber='true', EnteredInDryChamber='false' where PalData_Id in (select PalData_Id from ebos_Progress_Team2.dbo.PalDataBelHistory where PalNo in (?));");
         prepsInsertProduct.setString(1, String.valueOf(p.id));
         prepsInsertProduct.execute();
     }
     int updateprocessupdate(Palette p) throws SQLException {
-        System.out.println("update update update update update update update");
+       //System.out.println("update update update update update update update");
         PreparedStatement prepsInsertProduct;
         ResultSet rs;
         if (p.currentpos.equals("TP 12")) {

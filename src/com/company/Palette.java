@@ -29,11 +29,11 @@ public class Palette {
                 // MAche abfrage
 
                 resultSet = null;
-                System.out.println(this.currenttime);
+               //System.out.println(this.currenttime);
                 sql = "select PalNo, TimeStamp from dbo.LocPalHistory where LocationName=? and TimeStamp <= ? and TimeStamp >= ? ORDER BY TimeStamp DESC";
                 statement = conn.prepareStatement(sql);
                 String locName = "LG " + i + "|" + j;
-                System.out.println(locName );
+               //System.out.println(locName );
                 statement.setString(1, locName);
 
                 // Wenn er schon auß dem Lager draußen ist, ist es egal
@@ -42,19 +42,19 @@ public class Palette {
                 // Bei diesen Fällen kann man einfügen
                 // Fall 3: Es wurde in letzter Zeit eine Palette eingefügt. Aufgrund der Lagerzeit ist es noch blockiert zum Zeitpunkt
                 statement.setString(2, String.valueOf(new Timestamp(this.currenttime.getTime()+ 1000*60*lagerzeit)));
-                System.out.println(new Timestamp(this.currenttime.getTime()+ 1000*30));
+               //System.out.println(new Timestamp(this.currenttime.getTime()+ 1000*30));
                 statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime()- 1000*60* lagerzeit )));
-                System.out.println(new Timestamp(this.currenttime.getTime()- 1000*60* lagerzeit ));
+               //System.out.println(new Timestamp(this.currenttime.getTime()- 1000*60* lagerzeit ));
 
                 resultSet = statement.executeQuery();
                 boolean b = resultSet.next();
-                System.out.println(b);
+               //System.out.println(b);
                 if(!b){
-                    System.out.println("empty");
+                   //System.out.println("empty");
                 }
                 if( !b || resultSet.getInt(1) == 0){                // doesnt exist or was emptied again
                     //It can still be 0
-                    System.out.println(locName + " is empty, adding new palette");
+                   //System.out.println(locName + " is empty, adding new palette");
 
                     // See if RBG is in Use atm
 
@@ -64,8 +64,8 @@ public class Palette {
                         statement.setString(1, "RBG");
                         statement.setString(2, String.valueOf(new Timestamp(this.currenttime.getTime() + 30 * 1000)));
                         statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime())));
-                        System.out.println("Checking for RBG Conflicting times");
-                        System.out.println(this.currenttime);
+                       //System.out.println("Checking for RBG Conflicting times");
+                       //System.out.println(this.currenttime);
                         resultSet = statement.executeQuery();
                         b = resultSet.next();
 
@@ -129,7 +129,7 @@ public class Palette {
                         pos = num-24;                                       //TP 24,TP 25, TP 26, TP 27
 
                     }else{
-                        System.out.println(this.currentpos + " Is not a valid position for the Palete "+ this.id);
+                       //System.out.println(this.currentpos + " Is not a valid position for the Palete "+ this.id);
                         return "ERROR WHILE ADDING PALET TO LAGER";
                     }
                     // ANIMATION
