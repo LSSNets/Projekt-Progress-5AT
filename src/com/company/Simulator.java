@@ -212,9 +212,9 @@ public class Simulator {
                         p.currenttime = new Timestamp(p.currenttime.getTime() + 1000 * 60 * (long) dauerstation.get(i));
                         QV_3.kranbewegung(2, 3, p, p.currenttime);
                     } else if (reinfolge.get(i).equals("TP 24")||reinfolge.get(i).equals("TP 25")||reinfolge.get(i).equals("TP 26")||reinfolge.get(i).equals("TP 27")) {
-                        //updatestorageentry(p);
+                        updatestorageentry(p);
                         p.einlagern();
-                        //updatestorageleave(p);
+                        updatestorageleave(p);
                     } else {
                         System.out.println("standartpfad folgen "+reinfolge.get(i));
                         p.currenttime = new Timestamp(p.currenttime.getTime() + 1000 * 60 * (long) dauerstation.get(i));
@@ -237,15 +237,17 @@ public class Simulator {
 
     void updatestorageentry(Palette p) throws SQLException {
         PreparedStatement prepsInsertProduct;
-        prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set RemovedFromDryChamber='false', EnteredInDryChamber='true' where PalData_Id in (select PalData_Id from ebos_Progress_Team2.dbo.PalDataBelHistory where PalNo in (?));");
-        prepsInsertProduct.setString(1, String.valueOf(p.id));
+        prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set RemovedFromDryChamber='false', EnteredInDryChamber='true',Timestamp=? where PalData_Id in (select PalData_Id from ebos_Progress_Team2.dbo.PalDataBelHistory where PalNo in (?));");
+        prepsInsertProduct.setString(1, String.valueOf(p.currenttime));
+        prepsInsertProduct.setString(2, String.valueOf(p.id));
         prepsInsertProduct.execute();
     }
 
     void updatestorageleave(Palette p) throws SQLException {
         PreparedStatement prepsInsertProduct;
-        prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set RemovedFromDryChamber='true', EnteredInDryChamber='falase' where PalData_Id in (select PalData_Id from ebos_Progress_Team2.dbo.PalDataBelHistory where PalNo in (?));");
-        prepsInsertProduct.setString(1, String.valueOf(p.id));
+        prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set RemovedFromDryChamber='true', EnteredInDryChamber='false',Timestamp=? where PalData_Id in (select PalData_Id from ebos_Progress_Team2.dbo.PalDataBelHistory where PalNo in (?));");
+        prepsInsertProduct.setString(1, String.valueOf(p.currenttime));
+        prepsInsertProduct.setString(2, String.valueOf(p.id));
         prepsInsertProduct.execute();
     }
     int updateprocessupdate(Palette p) throws SQLException {
@@ -253,18 +255,21 @@ public class Simulator {
         PreparedStatement prepsInsertProduct;
         ResultSet rs;
         if (p.currentpos.equals("TP 12")) {
-            prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set BarsPlaced='true' where PalData_Id in (select PalData_Id from ebos_Progress_Team2.dbo.PalDataBelHistory where PalNo in (?))");
-            prepsInsertProduct.setString(1, String.valueOf(p.id));
+            prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set BarsPlaced='true',Timestamp=? where PalData_Id in (select PalData_Id from ebos_Progress_Team2.dbo.PalDataBelHistory where PalNo in (?))");
+            prepsInsertProduct.setString(1, String.valueOf(p.currenttime));
+            prepsInsertProduct.setString(2, String.valueOf(p.id));
             prepsInsertProduct.execute();
         }
         if (p.currentpos.equals("TP 13")) {
-            prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set GirdersPlaced='true' where PalData_Id in (select PalData_Id from ebos_Progress_Team2.dbo.PalDataBelHistory where PalNo in (?));");
-            prepsInsertProduct.setString(1, String.valueOf(p.id));
+            prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set GirdersPlaced='true',Timestamp=? where PalData_Id in (select PalData_Id from ebos_Progress_Team2.dbo.PalDataBelHistory where PalNo in (?));");
+            prepsInsertProduct.setString(1, String.valueOf(p.currenttime));
+            prepsInsertProduct.setString(2, String.valueOf(p.id));
             prepsInsertProduct.execute();
         }
         if (p.currentpos.equals("TP 23")) {
-            prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set ConcretingFinished='true' where PalData_Id in (select PalData_Id from ebos_Progress_Team2.dbo.PalDataBelHistory where PalNo in (?));");
-            prepsInsertProduct.setString(1, String.valueOf(p.id));
+            prepsInsertProduct = conn.prepareStatement("update ebos_Progress_Team2.dbo.PalDataMilestonesHistory set ConcretingFinished='true',Timestamp=? where PalData_Id in (select PalData_Id from ebos_Progress_Team2.dbo.PalDataBelHistory where PalNo in (?));");
+            prepsInsertProduct.setString(1, String.valueOf(p.currenttime));
+            prepsInsertProduct.setString(2, String.valueOf(p.id));
             prepsInsertProduct.execute();
         }
         return 0;
@@ -295,6 +300,7 @@ public class Simulator {
         prepsInsertProduct.setString(1, String.valueOf(paldataid));
         prepsInsertProduct.setString(2, String.valueOf(p.currenttime));
         prepsInsertProduct.execute();
+        updateprocessupdate(p);
         return paldataid;
     }
 }
