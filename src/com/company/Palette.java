@@ -190,7 +190,7 @@ public class Palette {
                     statement.setString(2, String.valueOf(0));
                     statement.setString(3, String.valueOf(this.currenttime));
                     statement.execute();
-
+                    this.currenttime=new Timestamp(this.currenttime.getTime()+1000*30);
                     // Palette zu TP 1
                     sql = "insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,?,?)";
                     statement = conn.prepareStatement(sql);
