@@ -152,7 +152,7 @@ public class Palette {
                     //TODO RBG Animation
 
                     // Move the RBG from the lager to the TP 26 which is connected to TP 30 which goes to TP 1
-                    rbg.RBGBewegung(conn, this, i-1, j-1, 2, 0);
+                    rbg.vonLGzuTP26(conn, this, i-1, j-1);
                     this.currenttime = new Timestamp(this.currenttime.getTime()-1000*30);
 
                     //Put palette in rbg
