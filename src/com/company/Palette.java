@@ -41,7 +41,7 @@ public class Palette {
                 // Fall 2: Es wurde in diesser Zeit aus dem Lager etwas rausgetan  (pal_id ist 0)
                 // Bei diesen Fällen kann man einfügen
                 // Fall 3: Es wurde in letzter Zeit eine Palette eingefügt. Aufgrund der Lagerzeit ist es noch blockiert zum Zeitpunkt
-                statement.setString(2, String.valueOf(new Timestamp(this.currenttime.getTime()+ 1000*60*lagerzeit)));
+                statement.setString(2, String.valueOf(new Timestamp(this.currenttime.getTime()))); // Es kann nicht in der Zukunft sein da das Programm nicht ni der Zeit zurückgeht
                //System.out.println(new Timestamp(this.currenttime.getTime()+ 1000*30));
                 statement.setString(3, String.valueOf(new Timestamp(this.currenttime.getTime()- 1000*60* lagerzeit )));
                //System.out.println(new Timestamp(this.currenttime.getTime()- 1000*60* lagerzeit ));
