@@ -63,7 +63,7 @@ public class RBG {
         prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
         prepsInsertProduct.execute();
         prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (2,?,?)");
-        prepsInsertProduct.setString(1, String.valueOf(tp[3]));//TP 26
+        prepsInsertProduct.setString(1, String.valueOf(tp[2]));//TP 26
         prepsInsertProduct.setString(2, String.valueOf(palette.currenttime));
         prepsInsertProduct.execute();
 
@@ -74,7 +74,7 @@ public class RBG {
         prepsInsertProduct.setString(2, String.valueOf(new Timestamp(palette.currenttime.getTime()+20)));
         prepsInsertProduct.execute();
         prepsInsertProduct = conn.prepareStatement("insert into dbo.SampleValueHistoryT(value_id_ref, value, timestamp) values (2,?,?)");
-        prepsInsertProduct.setString(1, String.valueOf(tp[3]));//pos
+        prepsInsertProduct.setString(1, String.valueOf(tp[2]));//pos
         prepsInsertProduct.setString(2, String.valueOf(new Timestamp(palette.currenttime.getTime()+20)));
         prepsInsertProduct.execute();
     }
