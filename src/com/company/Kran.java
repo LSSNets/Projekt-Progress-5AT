@@ -31,12 +31,10 @@ public class Kran {
            //System.out.println("pos wurde gesetzt");
             break;
         }
-       //System.out.println(pos + " ist qvpos " + t);
         if (pos != startindex) {
             t = new Timestamp(t.getTime() + ((long) bewegungsdauer) * 1000 * 60);
            //System.out.println("warten warten warten auf kran du lappen"+startindex+" ## "+pos);
         }
-       //System.out.println("in kranbewegung");
         PreparedStatement prepsInsertProduct;
         prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,0,?)");
         prepsInsertProduct.setString(1, stationsnamen.get(startindex-1));

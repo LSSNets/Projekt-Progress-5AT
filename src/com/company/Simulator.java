@@ -96,11 +96,9 @@ public class Simulator {
                     resultSet = statement.executeQuery();
                     while (resultSet.next()) {
                         palid2 = resultSet.getInt(1);
-                        //System.out.println("palid2 wurde gefuknden " + palid2);
                         break;
                     }
                     if (palid2 == 0) {  // if TP 10 is free
-                        //System.out.println(" nimmt die abkürung");
                         p.currenttime = new Timestamp(p.currenttime.getTime() + 1000 * 60 * (long) dauerstation.get(i));
                         prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,0,?)");
                         prepsInsertProduct.setString(1, reinfolge.get(i));
@@ -114,8 +112,6 @@ public class Simulator {
                         prepsInsertProduct.execute();
                         p.currentpos = "TP 10";
                         continue;
-                    } else {
-                        //System.out.println("geht normal weiter" + i);
                     }
                 }
 
@@ -127,11 +123,9 @@ public class Simulator {
                     resultSet = statement.executeQuery();
                     while (resultSet.next()) {
                         palid2 = resultSet.getInt(1);
-                        //System.out.println("palid2 wurde gefuknden " + palid2);
                         break;
                     }
                     if (palid2 == 0) {  // if TP 10 is free
-                        //System.out.println(" nimmt die abkürung");
                         p.currenttime = new Timestamp(p.currenttime.getTime() + 1000 * 60 * (long) dauerstation.get(i));
                         prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,0,?)");
                         prepsInsertProduct.setString(1, reinfolge.get(i));
@@ -157,11 +151,9 @@ public class Simulator {
                     resultSet = statement.executeQuery();
                     while (resultSet.next()) {
                         palid2 = resultSet.getInt(1);
-                        //System.out.println("palid2 wurde gefuknden " + palid2);
                         break;
                     }
                     if (palid2 == 0) {  // if TP 10 is free
-                        //System.out.println(" nimmt die abkürung");
                         p.currenttime = new Timestamp(p.currenttime.getTime() + 1000 * 60 * (long) dauerstation.get(i));
                         prepsInsertProduct = conn.prepareStatement("insert into dbo.LocPalHistory (LocationName,PalNo,Timestamp) values (?,0,?)");
                         prepsInsertProduct.setString(1, reinfolge.get(i));
@@ -175,26 +167,23 @@ public class Simulator {
                         p.currentpos = "TP 10";
                         prepsInsertProduct.execute();
                         continue;
-                    } else {
-                        //System.out.println("geht normal weiter" + i);
                     }
                 }
 
                 p.currenttime = new Timestamp(p.currenttime.getTime() + 1000 * 60 * (long) dauerstation.get(i));
-                selectSql = "select distinct PalNo,TimeStamp from dbo.LocPalHistory where TimeStamp<=? and LocationName=? order by TimeStamp desc";
+                selectSql = "select distinct PalNo,TimeStamp from dbo.LocPalHistory where TimeStamp<? and LocationName=? order by TimeStamp desc";
                 statement = conn.prepareStatement(selectSql);
                 statement.setString(1, String.valueOf(p.currenttime));
                 statement.setString(2, reinfolge.get(ii));
                 resultSet = statement.executeQuery();
                 palid2 = 0;
-                //System.out.println("sql command execution " + palid2);
                 while (resultSet.next()) {
                     palid2 = resultSet.getInt(1);
                     break;
                 }
                 //todo warten bis nexte stelle frei wird und checken ob die stelle auch 10 min lang frei bleibt.
                 if (palid2 != 0) {
-                    selectSql = "select distinct PalNo,TimeStamp from dbo.LocPalHistory where TimeStamp>? and LocationName=? and PalNo=0 order by TimeStamp asc";
+                    selectSql = "select distinct PalNo,TimeStamp from dbo.LocPalHistory where TimeStamp>=? and LocationName=? and PalNo=0 order by TimeStamp asc";
                     statement = conn.prepareStatement(selectSql);
                     statement.setString(1, String.valueOf(new Timestamp(p.currenttime.getTime())));
                     statement.setString(2, reinfolge.get(ii));
